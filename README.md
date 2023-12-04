@@ -12,11 +12,74 @@ The `FalClient` library serves as a client for fal serverless Python functions. 
 
 ### Client Library
 
-TODO
+// Initialize FalClient with your credentials
+val authKey = "$FAL_KEY"
+val falClient = FalClient(ClientConfig(credentials = authKey))
+
+// Define the input parameters for the function
+val inputParams = hashMapOf(
+    "prompt" to "a cute shih-tzu puppy",
+    "model_name" to "stabilityai/stable-diffusion-xl-base-1.0",
+    "image_size" to "square_hd"
+)
+
+// Run the function and print the result
+try {
+    val result = falClient.run("110602490-lora", inputParams)
+    println(result)
+} catch (e: Error) {
+    println("Error running the function: ${e.message}")
+}
+
+// Subscribe to the function and print the updates
+try {
+    val subscribeResult = falClient.subscribe("110602490-lora", inputParams, 1000L, 30000L, true) { update ->
+        println("Update: $update")
+    }
+    println("Final result: $subscribeResult")
+} catch (e: Error) {
+    println("Error subscribing to the function: ${e.message}")
+}
+
 
 ## Real-time
 
-TODO
+runBlocking {
+    val app = "110602490-lcm-sd15-i2i"
+    val authKey = "$FAL_KEY"
+
+    val onMessage: (String) -> Unit = { message ->
+        println("Received message: $message")
+    }
+
+    val onError: (Throwable) -> Unit = { error ->
+        println("Error occurred: ${error.message}")
+    }
+
+    val webSocketConnection = WebSocketConnection(app, onMessage, onError)
+
+    webSocketConnection.connect(authKey)
+
+    val inputMap = hashMapOf(
+        "prompt" to "an island near sea, with seagulls",
+        "image_url" to "https://storage.googleapis.com/falserverless/model_tests/lcm/source_image.png",
+        "seed" to 6252023,
+        "sync_mode" to 1,
+        "strength" to 0.8,
+        "num_inference_steps" to 4,
+    )
+
+    while(!webSocketConnection.isConnected()) {
+        delay(100)
+    }
+
+    webSocketConnection.send(Gson().toJson(inputMap))
+
+    delay(1000)
+ 
+    webSocketConnection.close()
+
+}
 
 ## Contributing
 
