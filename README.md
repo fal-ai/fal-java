@@ -11,7 +11,7 @@ The `FalClient` is a robust and user-friendly Kotlin package designed for seamle
 The `FalClient` library serves as a client for fal serverless Python functions. Before using this library, ensure you've set up your serverless functions as per the [quickstart guide](https://fal.ai/docs).
 
 ### Client Library
-
+```
 // Initialize FalClient with your credentials
 val authKey = "$FAL_KEY"
 val falClient = FalClient(ClientConfig(credentials = authKey))
@@ -40,10 +40,10 @@ try {
 } catch (e: Error) {
     println("Error subscribing to the function: ${e.message}")
 }
-
+```
 
 ## Real-time
-
+```
 runBlocking {
     val app = "110602490-lcm-sd15-i2i"
     val authKey = "$FAL_KEY"
@@ -80,7 +80,7 @@ runBlocking {
     webSocketConnection.close()
 
 }
-
+```
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make to the Swift version of the client are **greatly appreciated**.
