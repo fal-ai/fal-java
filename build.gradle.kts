@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.fal.falclient"
+    namespace = "ai.fal.falclient"
     compileSdk = 34
 
     defaultConfig {

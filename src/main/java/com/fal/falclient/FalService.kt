@@ -1,4 +1,4 @@
-package com.fal.falclient
+package ai.fal.falclient
 
 import retrofit2.Response
 import retrofit2.http.*

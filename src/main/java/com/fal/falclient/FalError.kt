@@ -1,4 +1,4 @@
-package com.fal.falclient
+package ai.fal.falclient
 
 open class FalError(message: String): Exception(message) {
     class InvalidResultFormat : FalError("The result format is invalid.")

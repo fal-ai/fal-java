@@ -1,4 +1,4 @@
-package com.fal.falclient
+package ai.fal.falclient
 import kotlinx.coroutines.delay
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
