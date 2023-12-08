@@ -1,3 +1,4 @@
+package ai.fal.falclient
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -101,6 +102,7 @@ class WebSocketConnection(
 
     fun close() {
         webSocket?.close(1000, "Programmatically closed")
+        webSocket = null
     }
 
     fun isConnected(): Boolean {
