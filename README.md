@@ -8,7 +8,7 @@ The `FalClient` is a robust and user-friendly Kotlin package designed for seamle
 
 ## Getting Started
 
-The `FalClient` library serves as a client for fal serverless Python functions. Before using this library, ensure you've set up your serverless functions as per the [quickstart guide](https://fal.ai/docs).
+The `FalClient` library serves as a client for fal serverless Python functions. Before using this library, ensure you've got your fal key from [our dashboard](https://fal.ai/dashboard/keys).
 
 ### Install
 
