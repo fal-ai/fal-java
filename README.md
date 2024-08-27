@@ -19,7 +19,8 @@ implementation("ai.fal:falclient:0.1.1")
 ```
 
 ### Client Library
-```
+
+```kotlin
 import ai.fal.falclient.*
 
 // Initialize FalClient with your credentials
