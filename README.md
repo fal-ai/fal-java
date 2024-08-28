@@ -23,10 +23,13 @@ implementation "ai.fal:fal-client:0.2.0"
 ```java
 import ai.fal.client.*;
 
+var fal = FalClient.withEnvCredentials();
+
 var input = JsonInput.input()
     .set("prompt", "A cute shih-tzu puppy")
     .build();
 var result = fal.subscribe("fal-ai/fast-sdxl", SubscribeOptions.withInput(input));
+
 System.out.println(result.getRequestId());
 System.out.println(result.getData());
 ```
