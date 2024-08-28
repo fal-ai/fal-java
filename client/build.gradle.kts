@@ -3,8 +3,8 @@ plugins {
   `maven-publish`
 }
 
-group = "ai.fal"
-version = "1.0.0"
+group = "ai.fal.client"
+version = "0.1.0-SNAPSHOT"
 
 java {
   sourceCompatibility = JavaVersion.VERSION_11
