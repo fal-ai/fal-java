@@ -6,17 +6,17 @@ import jakarta.annotation.Nonnull;
 /**
  * The main client interface for interacting with the FAL APIs.
  *
- * @see {@link FalClient#withConfig(ClientConfig)} method to create a new client instance with the
- *     provided configuration.
- * @see {@link FalClient#withEnvCredentials()} method to create a new client instance with the
- *     credentials resolved from the environment.
+ * @see #withConfig(ClientConfig) method to create a new client instance
+ * with the provided configuration.
+ * @see #withEnvCredentials() method to create a new client instance
+ * with the credentials resolved from the environment.
  */
 public interface FalClient {
 
     /**
      * Run the specified endpoint with the provided options. This method is only recommended for
      * short-running operations. For long-running operations, consider using the {@link
-     * #subscribe(String, SubscribeOptions<O>)} method to subscribe to the endpoint's results via
+     * #subscribe(String, SubscribeOptions)} method to subscribe to the endpoint's results via
      * the queue or {@link #queue()} client for specific queue operations. .
      *
      * @param <I> Input type.
@@ -53,7 +53,7 @@ public interface FalClient {
      * @param config The client configuration.
      * @return The new client instance.
      */
-    public static FalClient withConfig(@Nonnull ClientConfig config) {
+    static FalClient withConfig(@Nonnull ClientConfig config) {
         return new FalClientImpl(config);
     }
 
@@ -63,7 +63,7 @@ public interface FalClient {
      *
      * @return The new client instance.
      */
-    public static FalClient withEnvCredentials() {
+    static FalClient withEnvCredentials() {
         return new FalClientImpl(ClientConfig.withCredentials(CredentialsResolver.fromEnv()));
     }
 
@@ -75,7 +75,7 @@ public interface FalClient {
      * @param proxyUrl The proxy URL.
      * @return The new client instance.
      */
-    public static FalClient withProxyUrl(@Nonnull String proxyUrl) {
+    static FalClient withProxyUrl(@Nonnull String proxyUrl) {
         return new FalClientImpl(ClientConfig.builder().withProxyUrl(proxyUrl).build());
     }
 }

@@ -2,6 +2,7 @@ package ai.fal.client;
 
 import ai.fal.client.http.ClientProxyInterceptor;
 import ai.fal.client.http.CredentialsInterceptor;
+import ai.fal.client.http.FalException;
 import ai.fal.client.http.HttpClient;
 import ai.fal.client.queue.QueueClient;
 import ai.fal.client.queue.QueueClientImpl;
@@ -91,7 +92,7 @@ public class FalClientImpl implements FalClient {
             return resultFuture.get(1, TimeUnit.MINUTES);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             executor.shutdown();
-            throw new RuntimeException("Failed to get result", e);
+            throw new FalException("Failed to get result", e);
         }
     }
 
