@@ -95,5 +95,6 @@ gradle-app.setting
 
 .vscode/
 .DS_Store
+/gradle.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,android

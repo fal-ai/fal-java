@@ -31,7 +31,6 @@ public class QueueClientImpl implements QueueClient {
     @Nonnull
     @Override
     public QueueStatus.StatusUpdate status(@Nonnull String endpointId, @Nonnull QueueStatusOptions options) {
-
         final var endpoint = EndpointId.fromString(endpointId);
         final var url = String.format(
                 "https://queue.fal.run/%s/%s/requests/%s/status",
