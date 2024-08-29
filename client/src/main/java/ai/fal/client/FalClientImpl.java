@@ -2,21 +2,9 @@ package ai.fal.client;
 
 import ai.fal.client.http.ClientProxyInterceptor;
 import ai.fal.client.http.CredentialsInterceptor;
-import ai.fal.client.http.FalException;
 import ai.fal.client.http.HttpClient;
-import ai.fal.client.queue.QueueClient;
-import ai.fal.client.queue.QueueClientImpl;
-import ai.fal.client.queue.QueueResponseOptions;
-import ai.fal.client.queue.QueueStatus;
-import ai.fal.client.queue.QueueStatusOptions;
-import ai.fal.client.queue.QueueSubmitOptions;
+import ai.fal.client.queue.*;
 import jakarta.annotation.Nonnull;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import okhttp3.OkHttpClient;
 
 public class FalClientImpl implements FalClient {
@@ -52,48 +40,20 @@ public class FalClientImpl implements FalClient {
                         .webhookUrl(options.getWebhookUrl())
                         .build());
 
-        CompletableFuture<Result<O>> resultFuture = new CompletableFuture<>();
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        final var completed = queueClient.subscribeToStatus(
+                endpointId,
+                QueueSubscribeOptions.builder()
+                        .requestId(enqueued.getRequestId())
+                        .logs(options.getLogs())
+                        .onUpdate(options.getOnUpdate())
+                        .build());
 
-        executor.scheduleAtFixedRate(
-                () -> {
-                    try {
-                        final var status = queueClient.status(
-                                endpointId,
-                                QueueStatusOptions.builder()
-                                        .requestId(enqueued.getRequestId())
-                                        .logs(options.getLogs())
-                                        .build());
-
-                        final var onUpdate = options.getOnUpdate();
-                        if (onUpdate != null) {
-                            onUpdate.accept(status);
-                        }
-                        if (status instanceof QueueStatus.Completed) {
-                            Result<O> result = queueClient.result(
-                                    endpointId,
-                                    QueueResponseOptions.<O>builder()
-                                            .requestId(enqueued.getRequestId())
-                                            .resultType(options.getResultType())
-                                            .build());
-                            resultFuture.complete(result);
-                            executor.shutdown();
-                        }
-                    } catch (Exception e) {
-                        resultFuture.completeExceptionally(e);
-                        executor.shutdown();
-                    }
-                },
-                0,
-                250,
-                TimeUnit.MILLISECONDS);
-
-        try {
-            return resultFuture.get(1, TimeUnit.MINUTES);
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            executor.shutdown();
-            throw new FalException("Failed to get result", e);
-        }
+        return queueClient.result(
+                endpointId,
+                QueueResultOptions.<O>builder()
+                        .requestId(completed.getRequestId())
+                        .resultType(options.getResultType())
+                        .build());
     }
 
     @Override

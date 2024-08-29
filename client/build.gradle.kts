@@ -33,6 +33,7 @@ repositories {
 dependencies {
     api("com.google.code.gson:gson:2.11.0")
     api("com.squareup.okhttp3:okhttp:4.12.0")
+    api("com.squareup.okhttp3:okhttp-sse:4.12.0")
     implementation("jakarta.annotation:jakarta.annotation-api:3.0.0")
 
     compileOnly("org.projectlombok:lombok:1.18.34")
