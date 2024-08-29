@@ -42,7 +42,7 @@ public class FalClientImpl implements FalClient {
 
         final var completed = queueClient.subscribeToStatus(
                 endpointId,
-                QueueStatusSubscribeOptions.builder()
+                QueueSubscribeOptions.builder()
                         .requestId(enqueued.getRequestId())
                         .logs(options.getLogs())
                         .onUpdate(options.getOnUpdate())
