@@ -28,6 +28,16 @@ public interface QueueClient {
     QueueStatus.StatusUpdate status(@Nonnull String endpointId, @Nonnull QueueStatusOptions options);
 
     /**
+     * Subscribe to the status of a submission.
+     *
+     * @param endpointId the endpoint to subscribe to the status for
+     * @param options the subscribe options
+     * @return the status of the submission
+     */
+    @Nonnull
+    QueueStatus.Completed subscribeToStatus(@Nonnull String endpointId, @Nonnull QueueSubscribeOptions options);
+
+    /**
      * Get the result of a submission.
      *
      * @param <O> the type of the output payload
@@ -36,5 +46,5 @@ public interface QueueClient {
      * @return the result of the submission
      */
     @Nonnull
-    <O> Result<O> result(@Nonnull String endpointId, @Nonnull QueueResponseOptions<O> options);
+    <O> Result<O> result(@Nonnull String endpointId, @Nonnull QueueResultOptions<O> options);
 }

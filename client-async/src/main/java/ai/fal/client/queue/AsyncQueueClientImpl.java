@@ -3,7 +3,6 @@ package ai.fal.client.queue;
 import ai.fal.client.Result;
 import ai.fal.client.http.FalException;
 import ai.fal.client.http.HttpClient;
-import ai.fal.client.queue.QueueStatus.Completed;
 import ai.fal.client.util.EndpointId;
 import com.google.gson.JsonObject;
 import jakarta.annotation.Nonnull;
@@ -15,30 +14,32 @@ import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
 import okhttp3.sse.EventSources;
 
-public class QueueClientImpl implements QueueClient {
+public class AsyncQueueClientImpl implements AsyncQueueClient {
 
     private final HttpClient httpClient;
 
-    public QueueClientImpl(@Nonnull HttpClient httpClient) {
+    public AsyncQueueClientImpl(@Nonnull HttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
     @Nonnull
     @Override
-    public <I> QueueStatus.InQueue submit(@Nonnull String endpointId, @Nonnull QueueSubmitOptions<I> options) {
+    public <I> CompletableFuture<QueueStatus.InQueue> submit(String endpointId, QueueSubmitOptions<I> options) {
         final var url = "https://queue.fal.run/" + endpointId;
         final var queryParams = new HashMap<String, Object>();
         if (options.getWebhookUrl() != null) {
             queryParams.put("fal_webhook", options.getWebhookUrl());
         }
         final var request = httpClient.prepareRequest(url, options, queryParams);
-        final var response = httpClient.executeRequest(request);
-        return httpClient.handleResponse(response, QueueStatus.InQueue.class);
+        return httpClient
+                .executeRequestAsync(request)
+                .thenApply(response -> httpClient.handleResponse(response, QueueStatus.InQueue.class));
     }
 
     @Nonnull
     @Override
-    public QueueStatus.StatusUpdate status(@Nonnull String endpointId, @Nonnull QueueStatusOptions options) {
+    public CompletableFuture<QueueStatus.StatusUpdate> status(
+            @Nonnull String endpointId, @Nonnull QueueStatusOptions options) {
         final var endpoint = EndpointId.fromString(endpointId);
         final var url = String.format(
                 "https://queue.fal.run/%s/%s/requests/%s/status",
@@ -50,14 +51,16 @@ public class QueueClientImpl implements QueueClient {
         }
 
         final var request = httpClient.prepareRequest(url, options, queryParams);
-        final var response = httpClient.executeRequest(request);
-        final var result = httpClient.handleResponse(response, JsonObject.class);
-        return httpClient.fromJson(result, QueueStatus.resolveType(result));
+        return httpClient.executeRequestAsync(request).thenApply((response) -> {
+            final var result = httpClient.handleResponse(response, JsonObject.class);
+            return httpClient.fromJson(result, QueueStatus.resolveType(result));
+        });
     }
 
-    @Override
     @Nonnull
-    public Completed subscribeToStatus(@Nonnull String endpointId, @Nonnull QueueSubscribeOptions options) {
+    @Override
+    public CompletableFuture<QueueStatus.Completed> subscribeToStatus(
+            @Nonnull String endpointId, @Nonnull QueueSubscribeOptions options) {
         final var endpoint = EndpointId.fromString(endpointId);
         final var url = String.format(
                 "https://queue.fal.run/%s/%s/requests/%s/status/stream",
@@ -73,7 +76,7 @@ public class QueueClientImpl implements QueueClient {
                 .addHeader("Accept", "text/event-stream")
                 .build();
 
-        final var future = new CompletableFuture<Completed>();
+        final var future = new CompletableFuture<QueueStatus.Completed>();
 
         final var factory = EventSources.createFactory(httpClient.getUnderlyingClient());
         final var listener = new EventSourceListener() {
@@ -96,8 +99,8 @@ public class QueueClientImpl implements QueueClient {
 
             @Override
             public void onClosed(@Nonnull EventSource eventSource) {
-                if (currentStatus != null && currentStatus instanceof Completed) {
-                    future.complete((Completed) currentStatus);
+                if (currentStatus != null && currentStatus instanceof QueueStatus.Completed) {
+                    future.complete((QueueStatus.Completed) currentStatus);
                     return;
                 }
                 future.completeExceptionally(new FalException("Streaming closed with invalid state: " + currentStatus));
@@ -110,23 +113,20 @@ public class QueueClientImpl implements QueueClient {
             }
         };
         factory.newEventSource(request, listener);
-        try {
-            return future.get();
-        } catch (Exception ex) {
-            throw new FalException(ex.getMessage(), ex);
-        }
+        return future;
     }
 
     @Nonnull
     @Override
-    public <O> Result<O> result(@Nonnull String endpointId, @Nonnull QueueResultOptions<O> options) {
+    public <O> CompletableFuture<Result<O>> result(@Nonnull String endpointId, @Nonnull QueueResultOptions<O> options) {
         final var endpoint = EndpointId.fromString(endpointId);
         final var url = String.format(
                 "https://queue.fal.run/%s/%s/requests/%s",
                 endpoint.getAppOwner(), endpoint.getAppName(), options.getRequestId());
         final var request = httpClient.prepareRequest(url, options);
 
-        final var response = httpClient.executeRequest(request);
-        return httpClient.wrapInResult(response, options.getResultType());
+        return httpClient
+                .executeRequestAsync(request)
+                .thenApply((response) -> httpClient.wrapInResult(response, options.getResultType()));
     }
 }

@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class QueueResponseOptions<O> implements ApiOptions<JsonNull, O> {
+public class QueueResultOptions<O> implements ApiOptions<JsonNull, O> {
 
     @Nonnull
     private final String requestId;
@@ -25,8 +25,8 @@ public class QueueResponseOptions<O> implements ApiOptions<JsonNull, O> {
     }
 
     @Nonnull
-    public static QueueResponseOptions<JsonObject> withRequestId(@Nonnull String requestId) {
-        return QueueResponseOptions.<JsonObject>builder()
+    public static QueueResultOptions<JsonObject> withRequestId(@Nonnull String requestId) {
+        return QueueResultOptions.<JsonObject>builder()
                 .requestId(requestId)
                 .resultType(JsonObject.class)
                 .build();

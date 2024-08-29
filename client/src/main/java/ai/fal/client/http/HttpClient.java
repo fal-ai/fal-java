@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -31,10 +34,12 @@ public class HttpClient {
         this.gson = new Gson();
     }
 
+    @Nonnull
     public Request prepareRequest(@Nonnull String url, @Nonnull ApiOptions options) {
         return prepareRequest(url, options, Collections.EMPTY_MAP);
     }
 
+    @Nonnull
     public Request prepareRequest(
             @Nonnull String url, @Nonnull ApiOptions options, @Nonnull Map<String, Object> queryParams) {
         var body = options.getInput() != null ? gson.toJson(options.getInput()) : null;
@@ -63,6 +68,22 @@ public class HttpClient {
         }
     }
 
+    public CompletableFuture<Response> executeRequestAsync(Request request) {
+        var future = new CompletableFuture<Response>();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                future.complete(response);
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                future.completeExceptionally(e);
+            }
+        });
+        return future;
+    }
+
     public <T> T handleResponse(Response response, Class<T> resultType) {
         if (!response.isSuccessful()) {
             throw new FalException("Request failed with code: " + response.code());
@@ -77,5 +98,13 @@ public class HttpClient {
 
     public <T> T fromJson(JsonElement json, Class<T> type) {
         return gson.fromJson(json, type);
+    }
+
+    public <T> T fromJson(String json, Class<T> type) {
+        return gson.fromJson(json, type);
+    }
+
+    public OkHttpClient getUnderlyingClient() {
+        return client;
     }
 }
