@@ -1,7 +1,7 @@
 plugins {
     id("com.diffplug.spotless") version "6.25.0"
     id("com.vanniktech.maven.publish") version "0.29.0"
-    kotlin("jvm") version "2.0.20" apply false
+    kotlin("jvm") version "1.9.25" apply false
 }
 
 subprojects {
