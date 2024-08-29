@@ -8,6 +8,7 @@ import kotlin.reflect.KClass
 import ai.fal.client.queue.QueueResultOptions as InternalResultOptions
 import ai.fal.client.queue.QueueStatusOptions as InternalStatusOptions
 import ai.fal.client.queue.QueueSubmitOptions as InternalSubmitOptions
+import ai.fal.client.queue.QueueSubscribeOptions as InternalSubscribeOptions
 
 data class SubmitOptions(
     val webhookUrl: String? = null,
@@ -17,23 +18,75 @@ data class StatusOptions(
     val logs: Boolean = false,
 )
 
+data class StatusSubscribeOptions(
+    val logs: Boolean = false,
+)
+
 /**
  * A Kotlin queue client for interacting with the fal queue APIs.
  * @see AsyncQueueClient
  */
 interface QueueClient {
+    /**
+     * Submits a request to the given [endpointId]. This method
+     * uses the Queue API to submit the request and returns the initial
+     * status of the request.
+     *
+     * @param endpointId The ID of the endpoint to send the request to.
+     * @param input The input data to send to the endpoint.
+     * @param options The options to use for the request.
+     *
+     * @see #status
+     * @see #result
+     */
     suspend fun <Input> submit(
         endpointId: String,
         input: Input,
         options: SubmitOptions = SubmitOptions(),
     ): QueueStatus.InQueue
 
+    /**
+     * Gets the current status of the request with the given [requestId].
+     *
+     * @param endpointId The ID of the endpoint to send the request to.
+     * @param requestId The ID of the request to get the status for.
+     * @param options The options to use for the request.
+     *
+     * @see #submit
+     */
     suspend fun status(
         endpointId: String,
         requestId: String,
         options: StatusOptions = StatusOptions(),
     ): QueueStatus.StatusUpdate
 
+    /**
+     * Subscribes to the status updates of the request with the given [requestId].
+     * This method uses the Queue API to subscribe to the status updates of the request.
+     *
+     * @param endpointId The ID of the endpoint to send the request to.
+     * @param requestId The ID of the request to subscribe to.
+     * @param options The options to use for the request.
+     *
+     * @see #submit
+     * @see #status
+     */
+    suspend fun subscribeToStatus(
+        endpointId: String,
+        requestId: String,
+        options: StatusSubscribeOptions = StatusSubscribeOptions(),
+        onUpdate: OnStatusUpdate? = null,
+    ): QueueStatus.Completed
+
+    /**
+     * Gets the result of the request with the given `requestId`.
+     *
+     * @param endpointId The ID of the endpoint to send the request to.
+     * @param requestId The ID of the request to get the result for.
+     * @param resultType The expected result type of the request.
+     *
+     * @see #submit
+     */
     suspend fun <Output : Any> result(
         endpointId: String,
         requestId: String,
@@ -72,6 +125,22 @@ internal class QueueClientImpl(
             InternalStatusOptions.builder()
                 .requestId(requestId)
                 .logs(options.logs)
+                .build(),
+        ).await()
+    }
+
+    override suspend fun subscribeToStatus(
+        endpointId: String,
+        requestId: String,
+        options: StatusSubscribeOptions,
+        onUpdate: OnStatusUpdate?,
+    ): QueueStatus.Completed {
+        return queueClient.subscribeToStatus(
+            endpointId,
+            InternalSubscribeOptions.builder()
+                .requestId(requestId)
+                .logs(options.logs)
+                .onUpdate(onUpdate)
                 .build(),
         ).await()
     }

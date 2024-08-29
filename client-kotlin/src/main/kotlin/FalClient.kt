@@ -5,7 +5,6 @@ import ai.fal.client.ClientConfig
 import ai.fal.client.CredentialsResolver
 import ai.fal.client.Result
 import ai.fal.client.queue.QueueStatus
-import com.google.gson.JsonObject
 import kotlinx.coroutines.future.await
 import kotlin.reflect.KClass
 import ai.fal.client.RunOptions as InternalRunOptions
@@ -20,9 +19,31 @@ data class SubscribeOptions(
     val webhookUrl: String? = null,
 )
 
+/**
+ * The main client class that provides access to simple API model usage,
+ * as well as access to the [queue] APIs.
+ * @see AsyncFalClient
+ */
 interface FalClient {
+    /** The queue client with specific methods to interact with the queue API.
+     *
+     * **Note:** that the [subscribe] method is a convenience method that uses the
+     * [queue] client to submit a request and poll for the result.
+     */
     val queue: QueueClient
 
+    /**
+     * Sends a request to the given [endpointId]. This method is a direct request
+     * to the model API and it waits for the processing to complete before returning the result.
+     *
+     * This is useful for short running requests, but it's not recommended for
+     * long running requests, for those see [subscribe].
+     *
+     * @param endpointId The ID of the endpoint to send the request to.
+     * @param input The input data to send to the endpoint.
+     * @param resultType The expected result type of the request.
+     * @param options The options to use for the request.
+     */
     suspend fun <Input, Output : Any> run(
         endpointId: String,
         input: Input,
@@ -30,6 +51,19 @@ interface FalClient {
         options: RunOptions = RunOptions(),
     ): Result<Output>
 
+    /**
+     * Submits a request to the given [endpointId]. This method
+     * uses the [queue] API to submit the request and poll for the result.
+     *
+     * This is useful for long running requests, and it's the preffered way
+     * to interact with the model APIs.
+     *
+     * @param endpointId The ID of the endpoint to send the request to.
+     * @param input The input data to send to the endpoint.
+     * @param resultType The expected result type of the request.
+     * @param options The options to use for the request.
+     * @param onUpdate A callback to receive status updates from the queue subscription.
+     */
     suspend fun <Input, Output : Any> subscribe(
         endpointId: String,
         input: Input,
@@ -39,9 +73,15 @@ interface FalClient {
     ): Result<Output>
 }
 
+/**
+ * A callback for receiving status updates from a queue subscription.
+ */
 typealias OnStatusUpdate = (update: QueueStatus.StatusUpdate) -> Unit
 
-class FalClientKotlinImpl(
+/**
+ * A Kotlin implementation of [FalClient] that wraps the Java [AsyncFalClient].
+ */
+internal class FalClientKotlinImpl(
     config: ClientConfig,
 ) : FalClient {
     private val client = AsyncFalClient.withConfig(config)
@@ -83,12 +123,35 @@ class FalClientKotlinImpl(
     }
 }
 
+/**
+ * Sends a request to the given [endpointId]. This method is a direct request
+ * to the model API and it waits for the processing to complete before returning the result.
+ *
+ * This is useful for short running requests, but it's not recommended for
+ * long running requests, for those see [subscribe].
+ *
+ * @param endpointId The ID of the endpoint to send the request to.
+ * @param input The input data to send to the endpoint.
+ * @param options The options to use for the request.
+ */
 suspend inline fun <Input, reified Output : Any> FalClient.run(
     endpointId: String,
     input: Input,
     options: RunOptions = RunOptions(),
 ) = this.run(endpointId, input, Output::class, options)
 
+/**
+ * Submits a request to the given [endpointId]. This method
+ * uses the [queue] API to submit the request and poll for the result.
+ *
+ * This is useful for long running requests, and it's the preffered way
+ * to interact with the model APIs.
+ *
+ * @param endpointId The ID of the endpoint to send the request to.
+ * @param input The input data to send to the endpoint.
+ * @param options The options to use for the request.
+ * @param onUpdate A callback to receive status updates from the queue subscription.
+ */
 suspend inline fun <Input, reified Output : Any> FalClient.subscribe(
     endpointId: String,
     input: Input,
@@ -98,35 +161,3 @@ suspend inline fun <Input, reified Output : Any> FalClient.subscribe(
 
 fun createFalClient(config: ClientConfig? = null): FalClient =
     FalClientKotlinImpl(config ?: ClientConfig.withCredentials(CredentialsResolver.fromEnv()))
-
-suspend fun main() {
-    val fal = createFalClient(ClientConfig.withCredentials { "544baac1-da1b-49b8-b3d9-4d45c237acdb:7d5c9487c05c555f88016390e3e68904" })
-    val input =
-        mapOf(
-            "prompt" to "a cute shih-tzu puppy",
-        )
-    val result: Result<JsonObject> = fal.run("fal-ai/fast-sdxl", input)
-    println(result.requestId)
-    println(result.data)
-
-    println("# --- fal.subscribe")
-    val queueResult: Result<JsonObject> =
-        fal.subscribe("fal-ai/fast-sdxl", input) {
-            println("--------------")
-            println(it)
-        }
-    println(queueResult.requestId)
-    println(queueResult.data)
-
-    val submitted =
-        fal.queue.submit(
-            "fal-ai/fast-sdxl",
-            input = input,
-            options =
-                SubmitOptions(
-                    webhookUrl = "https://webhook.site/43397eb6-3c2d-4d72-94c8-4d49d4737751",
-                ),
-        )
-    println("submitted.queuePosition = ${submitted.queuePosition}")
-    println("submitted.status = ${submitted.status}")
-}
