@@ -3,10 +3,7 @@ package ai.fal.client;
 import ai.fal.client.http.ClientProxyInterceptor;
 import ai.fal.client.http.CredentialsInterceptor;
 import ai.fal.client.http.HttpClient;
-import ai.fal.client.queue.AsyncQueueClient;
-import ai.fal.client.queue.AsyncQueueClientImpl;
-import ai.fal.client.queue.QueueResponseOptions;
-import ai.fal.client.queue.QueueSubmitOptions;
+import ai.fal.client.queue.*;
 import java.util.concurrent.CompletableFuture;
 import okhttp3.OkHttpClient;
 
@@ -43,10 +40,16 @@ public class AsyncFalClientImpl implements AsyncFalClient {
                                 .input(options.getInput())
                                 .webhookUrl(options.getWebhookUrl())
                                 .build())
-                .thenCompose((submitted) -> queueClient.subscribeToStatus(endpointId, options))
+                .thenCompose((submitted) -> queueClient.subscribeToStatus(
+                        endpointId,
+                        QueueSubscribeOptions.builder()
+                                .requestId(submitted.getRequestId())
+                                .logs(options.getLogs())
+                                .onUpdate(options.getOnUpdate())
+                                .build()))
                 .thenCompose((completed) -> queueClient.result(
                         endpointId,
-                        QueueResponseOptions.<O>builder()
+                        QueueResultOptions.<O>builder()
                                 .requestId(completed.getRequestId())
                                 .resultType(options.getResultType())
                                 .build()));
