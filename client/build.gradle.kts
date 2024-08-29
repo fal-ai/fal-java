@@ -1,7 +1,3 @@
-import com.vanniktech.maven.publish.JavaLibrary
-import com.vanniktech.maven.publish.JavadocJar
-import com.vanniktech.maven.publish.SonatypeHost
-
 plugins {
     `java-library`
 }
@@ -14,17 +10,17 @@ java {
 //    withJavadocJar()
 }
 
-mavenPublishing {
-    publishToMavenCentral(SonatypeHost.S01)
-    // signAllPublications()
-
-    configure(
-        JavaLibrary(
-            javadocJar = JavadocJar.Javadoc(),
-            sourcesJar = true,
-        ),
-    )
-}
+// mavenPublishing {
+//    publishToMavenCentral(SonatypeHost.S01)
+//    // signAllPublications()
+//
+//    configure(
+//        JavaLibrary(
+//            javadocJar = JavadocJar.Javadoc(),
+//            sourcesJar = true,
+//        ),
+//    )
+// }
 
 repositories {
     mavenCentral()
