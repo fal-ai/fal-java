@@ -1,4 +1,4 @@
-## The fal.ai Kotlin Client
+## The fal.ai JVM Client for Java and Kotlin
 
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
