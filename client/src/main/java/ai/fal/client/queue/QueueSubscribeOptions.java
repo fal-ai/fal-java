@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class QueueSubscribeOptions implements ApiOptions<JsonNull, QueueStatus.Completed> {
+public class QueueSubscribeOptions implements ApiOptions<QueueStatus.Completed> {
 
     private final JsonNull input = JsonNull.INSTANCE;
     private final Class<QueueStatus.Completed> resultType = QueueStatus.Completed.class;

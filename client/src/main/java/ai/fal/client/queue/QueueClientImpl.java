@@ -1,6 +1,6 @@
 package ai.fal.client.queue;
 
-import ai.fal.client.Result;
+import ai.fal.client.Output;
 import ai.fal.client.exception.FalException;
 import ai.fal.client.http.HttpClient;
 import ai.fal.client.queue.QueueStatus.Completed;
@@ -25,7 +25,7 @@ public class QueueClientImpl implements QueueClient {
 
     @Nonnull
     @Override
-    public <I> QueueStatus.InQueue submit(@Nonnull String endpointId, @Nonnull QueueSubmitOptions<I> options) {
+    public QueueStatus.InQueue submit(@Nonnull String endpointId, @Nonnull QueueSubmitOptions options) {
         final var url = "https://queue.fal.run/" + endpointId;
         final var queryParams = new HashMap<String, Object>();
         if (options.getWebhookUrl() != null) {
@@ -120,7 +120,7 @@ public class QueueClientImpl implements QueueClient {
 
     @Nonnull
     @Override
-    public <O> Result<O> result(@Nonnull String endpointId, @Nonnull QueueResultOptions<O> options) {
+    public <O> Output<O> result(@Nonnull String endpointId, @Nonnull QueueResultOptions<O> options) {
         final var endpoint = EndpointId.fromString(endpointId);
         final var url = String.format(
                 "https://queue.fal.run/%s/%s/requests/%s",

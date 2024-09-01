@@ -6,9 +6,9 @@ import java.util.concurrent.CompletableFuture;
 
 public interface AsyncFalClient {
 
-    <I, O> CompletableFuture<Result<O>> run(String endpointId, RunOptions<I, O> options);
+    <O> CompletableFuture<Output<O>> run(String endpointId, RunOptions<O> options);
 
-    <O> CompletableFuture<Result<O>> subscribe(String endpointId, SubscribeOptions<O> options);
+    <O> CompletableFuture<Output<O>> subscribe(String endpointId, SubscribeOptions<O> options);
 
     AsyncQueueClient queue();
 

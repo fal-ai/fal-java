@@ -1,13 +1,13 @@
 package ai.fal.client.queue;
 
-import ai.fal.client.Result;
+import ai.fal.client.Output;
 import jakarta.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 
 public interface AsyncQueueClient {
 
     @Nonnull
-    <I> CompletableFuture<QueueStatus.InQueue> submit(String endpointId, QueueSubmitOptions<I> options);
+    CompletableFuture<QueueStatus.InQueue> submit(String endpointId, QueueSubmitOptions options);
 
     @Nonnull
     CompletableFuture<QueueStatus.StatusUpdate> status(@Nonnull String endpointId, @Nonnull QueueStatusOptions options);
@@ -17,5 +17,5 @@ public interface AsyncQueueClient {
             @Nonnull String endpointId, @Nonnull QueueSubscribeOptions options);
 
     @Nonnull
-    <O> CompletableFuture<Result<O>> result(@Nonnull String endpointId, @Nonnull QueueResultOptions<O> options);
+    <O> CompletableFuture<Output<O>> result(@Nonnull String endpointId, @Nonnull QueueResultOptions<O> options);
 }

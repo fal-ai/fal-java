@@ -1,8 +1,8 @@
 package ai.fal.client;
 
-public interface ApiOptions<I, O> {
+public interface ApiOptions<O> {
 
-    I getInput();
+    Object getInput();
 
     String getHttpMethod();
 

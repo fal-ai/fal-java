@@ -2,7 +2,7 @@ package ai.fal.client.http;
 
 import ai.fal.client.ApiOptions;
 import ai.fal.client.ClientConfig;
-import ai.fal.client.Result;
+import ai.fal.client.Output;
 import ai.fal.client.exception.FalException;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -112,9 +112,9 @@ public class HttpClient {
         return new FalException("Request failed with code: " + response.code(), requestId);
     }
 
-    public <T> Result<T> wrapInResult(Response response, Class<T> resultType) {
+    public <T> Output<T> wrapInResult(Response response, Class<T> resultType) {
         final String requestId = response.header(HEADER_REQUEST_ID);
-        return new Result<>(handleResponse(response, resultType), requestId);
+        return new Output<>(handleResponse(response, resultType), requestId);
     }
 
     public <T> T fromJson(JsonElement json, Class<T> type) {

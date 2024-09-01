@@ -23,7 +23,7 @@ public class AsyncFalClientImpl implements AsyncFalClient {
     }
 
     @Override
-    public <I, O> CompletableFuture<Result<O>> run(String endpointId, RunOptions<I, O> options) {
+    public <O> CompletableFuture<Output<O>> run(String endpointId, RunOptions<O> options) {
         final var url = "https://fal.run/" + endpointId;
         final var request = httpClient.prepareRequest(url, options);
         return httpClient
@@ -32,7 +32,7 @@ public class AsyncFalClientImpl implements AsyncFalClient {
     }
 
     @Override
-    public <O> CompletableFuture<Result<O>> subscribe(String endpointId, SubscribeOptions<O> options) {
+    public <O> CompletableFuture<Output<O>> subscribe(String endpointId, SubscribeOptions<O> options) {
         return queueClient
                 .submit(
                         endpointId,

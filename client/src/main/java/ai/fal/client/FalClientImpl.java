@@ -23,7 +23,7 @@ public class FalClientImpl implements FalClient {
 
     @Override
     @Nonnull
-    public <I, O> Result<O> run(String endpointId, RunOptions<I, O> options) {
+    public <O> Output<O> run(String endpointId, RunOptions<O> options) {
         final var url = "https://fal.run/" + endpointId;
         final var request = httpClient.prepareRequest(url, options);
         final var response = httpClient.executeRequest(request);
@@ -32,7 +32,7 @@ public class FalClientImpl implements FalClient {
 
     @Override
     @Nonnull
-    public <O> Result<O> subscribe(String endpointId, SubscribeOptions<O> options) {
+    public <O> Output<O> subscribe(String endpointId, SubscribeOptions<O> options) {
         final var enqueued = queueClient.submit(
                 endpointId,
                 QueueSubmitOptions.builder()

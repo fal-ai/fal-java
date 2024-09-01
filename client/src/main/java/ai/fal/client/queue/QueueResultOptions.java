@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class QueueResultOptions<O> implements ApiOptions<JsonNull, O> {
+public class QueueResultOptions<O> implements ApiOptions<O> {
 
     @Nonnull
     private final String requestId;

@@ -7,16 +7,17 @@ import lombok.Data;
 
 @Data
 @Builder
-public class RunOptions<I, O> implements ApiOptions<I, O> {
+public class RunOptions<O> implements ApiOptions<O> {
 
-    private final I input;
+    private final Object input;
     private final String httpMethod;
     private final Class<O> resultType;
 
-    public static <Input> RunOptions<Input, JsonObject> withInput(@Nonnull Input input) {
-        return RunOptions.<Input, JsonObject>builder()
-                .input(input)
-                .resultType(JsonObject.class)
-                .build();
+    public static <O> RunOptions<O> withInput(@Nonnull Object input, @Nonnull Class<O> resultType) {
+        return RunOptions.<O>builder().input(input).resultType(resultType).build();
+    }
+
+    public static RunOptions<JsonObject> withInput(@Nonnull Object input) {
+        return withInput(input, JsonObject.class);
     }
 }

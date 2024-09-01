@@ -20,11 +20,15 @@ public class ClientConfig {
     }
 
     public static Builder builder() {
-        return new Builder();
+        return new Builder().withCredentials(CredentialsResolver.fromEnv());
     }
 
     public static ClientConfig withCredentials(CredentialsResolver credentials) {
         return builder().withCredentials(credentials).build();
+    }
+
+    public static ClientConfig withProxyUrl(String proxyUrl) {
+        return builder().withProxyUrl(proxyUrl).build();
     }
 
     public static class Builder {
