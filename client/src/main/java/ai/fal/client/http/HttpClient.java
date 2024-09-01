@@ -3,6 +3,7 @@ package ai.fal.client.http;
 import ai.fal.client.ApiOptions;
 import ai.fal.client.ClientConfig;
 import ai.fal.client.Result;
+import ai.fal.client.exception.FalException;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import jakarta.annotation.Nonnull;
@@ -23,6 +24,8 @@ import okhttp3.Response;
 public class HttpClient {
 
     private static final String APPLICATION_JSON = "application/json";
+
+    private static final String HEADER_REQUEST_ID = "X-Fal-Request-Id";
 
     private final ClientConfig config;
     private final OkHttpClient client;
@@ -85,14 +88,32 @@ public class HttpClient {
     }
 
     public <T> T handleResponse(Response response, Class<T> resultType) {
+        final var requestId = response.header(HEADER_REQUEST_ID);
         if (!response.isSuccessful()) {
-            throw new FalException("Request failed with code: " + response.code());
+            throw responseToException(response);
         }
-        return gson.fromJson(response.body().charStream(), resultType);
+        final var body = response.body();
+        if (body == null) {
+            throw new FalException("Response has empty body", requestId);
+        }
+        return gson.fromJson(body.charStream(), resultType);
+    }
+
+    public FalException responseToException(Response response) {
+        final var requestId = response.header(HEADER_REQUEST_ID);
+        final var contentType = response.header("content-type");
+        if (contentType != null && contentType.contains("application/json")) {
+            final var body = response.body();
+            if (body != null) {
+                final var json = gson.fromJson(body.charStream(), JsonElement.class);
+            }
+        }
+
+        return new FalException("Request failed with code: " + response.code(), requestId);
     }
 
     public <T> Result<T> wrapInResult(Response response, Class<T> resultType) {
-        final String requestId = response.header("X-Fal-Request-Id");
+        final String requestId = response.header(HEADER_REQUEST_ID);
         return new Result<>(handleResponse(response, resultType), requestId);
     }
 

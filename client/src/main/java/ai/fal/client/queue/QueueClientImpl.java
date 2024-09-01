@@ -1,7 +1,7 @@
 package ai.fal.client.queue;
 
 import ai.fal.client.Result;
-import ai.fal.client.http.FalException;
+import ai.fal.client.exception.FalException;
 import ai.fal.client.http.HttpClient;
 import ai.fal.client.queue.QueueStatus.Completed;
 import ai.fal.client.util.EndpointId;
@@ -100,7 +100,8 @@ public class QueueClientImpl implements QueueClient {
                     future.complete((Completed) currentStatus);
                     return;
                 }
-                future.completeExceptionally(new FalException("Streaming closed with invalid state: " + currentStatus));
+                future.completeExceptionally(new FalException(
+                        "Streaming closed with invalid state: " + currentStatus, options.getRequestId()));
             }
 
             @Override
@@ -113,7 +114,7 @@ public class QueueClientImpl implements QueueClient {
         try {
             return future.get();
         } catch (Exception ex) {
-            throw new FalException(ex.getMessage(), ex);
+            throw new FalException(ex.getMessage(), ex, options.getRequestId());
         }
     }
 

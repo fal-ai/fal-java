@@ -1,7 +1,7 @@
 package ai.fal.client.queue;
 
 import ai.fal.client.Result;
-import ai.fal.client.http.FalException;
+import ai.fal.client.exception.FalException;
 import ai.fal.client.http.HttpClient;
 import ai.fal.client.util.EndpointId;
 import com.google.gson.JsonObject;
@@ -103,7 +103,8 @@ public class AsyncQueueClientImpl implements AsyncQueueClient {
                     future.complete((QueueStatus.Completed) currentStatus);
                     return;
                 }
-                future.completeExceptionally(new FalException("Streaming closed with invalid state: " + currentStatus));
+                future.completeExceptionally(new FalException(
+                        "Streaming closed with invalid state: " + currentStatus, options.getRequestId()));
             }
 
             @Override
