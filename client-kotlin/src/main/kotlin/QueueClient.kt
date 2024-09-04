@@ -1,8 +1,8 @@
 package ai.fal.client.kt
 
-import ai.fal.client.Result
 import ai.fal.client.queue.AsyncQueueClient
 import ai.fal.client.queue.QueueStatus
+import com.google.gson.JsonObject
 import kotlinx.coroutines.future.await
 import kotlin.reflect.KClass
 import ai.fal.client.queue.QueueResultOptions as InternalResultOptions
@@ -91,7 +91,7 @@ interface QueueClient {
         endpointId: String,
         requestId: String,
         resultType: KClass<Output>,
-    ): Result<Output>
+    ): RequestOutput<Output>
 }
 
 /**
@@ -108,7 +108,7 @@ internal class QueueClientImpl(
     ): QueueStatus.InQueue {
         return queueClient.submit(
             endpointId,
-            InternalSubmitOptions.builder<Any>()
+            InternalSubmitOptions.builder()
                 .input(input)
                 .webhookUrl(options.webhookUrl)
                 .build(),
@@ -149,20 +149,28 @@ internal class QueueClientImpl(
         endpointId: String,
         requestId: String,
         resultType: KClass<Output>,
-    ): Result<Output> {
+    ): RequestOutput<Output> {
         return queueClient.result(
             endpointId,
             InternalResultOptions.builder<Output>()
                 .requestId(requestId)
                 .resultType(resultType.java)
                 .build(),
-        ).await()
+        ).thenConvertOutput().await()
     }
 }
 
 suspend inline fun <reified Output : Any> QueueClient.result(
     endpointId: String,
     requestId: String,
-): Result<Output> {
+): RequestOutput<Output> {
     return result(endpointId, requestId, Output::class)
+}
+
+@JvmName("result_")
+suspend inline fun QueueClient.result(
+    endpointId: String,
+    requestId: String,
+): RequestOutput<JsonObject> {
+    return result(endpointId, requestId, JsonObject::class)
 }

@@ -1,6 +1,6 @@
 package ai.fal.client.queue;
 
-import ai.fal.client.Result;
+import ai.fal.client.Output;
 import jakarta.annotation.Nonnull;
 
 /** A client for interacting with the queue endpoints. */
@@ -9,13 +9,12 @@ public interface QueueClient {
     /**
      * Submit a payload to an endpoint's queue.
      *
-     * @param <I> the type of the input payload
      * @param endpointId the endpoint to submit to (e.g. `fal-ai/fast-sdxl`)
      * @param options the submit options
      * @return the status of the submission with the `requestId` for tracking the submission.
      */
     @Nonnull
-    <I> QueueStatus.InQueue submit(String endpointId, QueueSubmitOptions<I> options);
+    QueueStatus.InQueue submit(String endpointId, QueueSubmitOptions options);
 
     /**
      * Check the status of a submission.
@@ -46,5 +45,5 @@ public interface QueueClient {
      * @return the result of the submission
      */
     @Nonnull
-    <O> Result<O> result(@Nonnull String endpointId, @Nonnull QueueResultOptions<O> options);
+    <O> Output<O> result(@Nonnull String endpointId, @Nonnull QueueResultOptions<O> options);
 }

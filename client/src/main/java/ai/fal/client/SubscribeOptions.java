@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class SubscribeOptions<O> implements ApiOptions<Object, O> {
+public class SubscribeOptions<O> implements ApiOptions<O> {
 
     @Nonnull
     private final Object input;
@@ -33,10 +33,12 @@ public class SubscribeOptions<O> implements ApiOptions<Object, O> {
     }
 
     @Nonnull
-    public static <Input> SubscribeOptions<JsonObject> withInput(@Nonnull Input input) {
-        return SubscribeOptions.<JsonObject>builder()
-                .input(input)
-                .resultType(JsonObject.class)
-                .build();
+    public static SubscribeOptions<JsonObject> withInput(@Nonnull Object input) {
+        return withInput(input, JsonObject.class);
+    }
+
+    @Nonnull
+    public static <O> SubscribeOptions<O> withInput(@Nonnull Object input, @Nullable Class<O> resultType) {
+        return SubscribeOptions.<O>builder().input(input).resultType(resultType).build();
     }
 }

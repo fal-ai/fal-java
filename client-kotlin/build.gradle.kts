@@ -1,9 +1,22 @@
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.KotlinJvm
+
 plugins {
     kotlin("jvm")
+    id("org.jetbrains.dokka") version "1.9.20"
 }
 
 repositories {
     mavenCentral()
+}
+
+mavenPublishing {
+    configure(
+        KotlinJvm(
+            javadocJar = JavadocJar.Dokka("dokkaHtml"),
+            sourcesJar = true,
+        ),
+    )
 }
 
 dependencies {

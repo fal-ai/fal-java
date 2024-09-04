@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class QueueStatusOptions implements ApiOptions<JsonNull, QueueStatus> {
+public class QueueStatusOptions implements ApiOptions<QueueStatus> {
 
     @Nonnull
     private final JsonNull input = JsonNull.INSTANCE;

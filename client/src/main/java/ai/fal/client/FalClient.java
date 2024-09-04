@@ -19,13 +19,12 @@ public interface FalClient {
      * #subscribe(String, SubscribeOptions)} method to subscribe to the endpoint's results via
      * the queue or {@link #queue()} client for specific queue operations. .
      *
-     * @param <I> Input type.
      * @param <O> Output type.
      * @param endpointId The endpoint ID to run, e.g. `fal-ai/fast-sdxl`.
      * @param options The run options.
      * @return The result of the operation.
      */
-    <I, O> Result<O> run(String endpointId, RunOptions<I, O> options);
+    <O> Output<O> run(String endpointId, RunOptions<O> options);
 
     /**
      * Subscribe to the specified endpoint with the provided options. This method is recommended for
@@ -38,7 +37,7 @@ public interface FalClient {
      * @return The result of the operation.
      * @see #queue()
      */
-    <O> Result<O> subscribe(String endpointId, SubscribeOptions<O> options);
+    <O> Output<O> subscribe(String endpointId, SubscribeOptions<O> options);
 
     /**
      * Get the queue client for interacting with the FAL queue.

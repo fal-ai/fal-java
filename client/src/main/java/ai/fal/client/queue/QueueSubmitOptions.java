@@ -8,10 +8,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class QueueSubmitOptions<I> implements ApiOptions<I, QueueStatus.InQueue> {
+public class QueueSubmitOptions implements ApiOptions<QueueStatus.InQueue> {
 
     @Nonnull
-    private final I input;
+    private final Object input;
 
     @Nullable
     private final String webhookUrl;
@@ -24,7 +24,7 @@ public class QueueSubmitOptions<I> implements ApiOptions<I, QueueStatus.InQueue>
         return "POST";
     }
 
-    public static <I> QueueSubmitOptions<I> withInput(@Nonnull I input) {
-        return QueueSubmitOptions.<I>builder().input(input).build();
+    public static QueueSubmitOptions withInput(@Nonnull Object input) {
+        return QueueSubmitOptions.builder().input(input).build();
     }
 }

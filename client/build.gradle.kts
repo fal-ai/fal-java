@@ -1,3 +1,6 @@
+import com.vanniktech.maven.publish.JavaLibrary
+import com.vanniktech.maven.publish.JavadocJar
+
 plugins {
     `java-library`
 }
@@ -5,22 +8,16 @@ plugins {
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
-
-//    withSourcesJar()
-//    withJavadocJar()
 }
 
-// mavenPublishing {
-//    publishToMavenCentral(SonatypeHost.S01)
-//    // signAllPublications()
-//
-//    configure(
-//        JavaLibrary(
-//            javadocJar = JavadocJar.Javadoc(),
-//            sourcesJar = true,
-//        ),
-//    )
-// }
+mavenPublishing {
+    configure(
+        JavaLibrary(
+            javadocJar = JavadocJar.Javadoc(),
+            sourcesJar = true,
+        ),
+    )
+}
 
 repositories {
     mavenCentral()
