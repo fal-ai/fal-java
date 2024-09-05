@@ -20,13 +20,12 @@ The
 
 ### Client Library
 
-
 #### Synchronous
 
 ##### Install
 
 ```groovy
-implementation "ai.fal.client:fal-client:0.7.0"
+implementation "ai.fal.client:fal-client:0.7.1"
 ```
 
 ##### Call the API
@@ -36,11 +35,18 @@ import ai.fal.client.*;
 
 var fal = FalClient.withEnvCredentials();
 
-var input = JsonInput.input()
-    .set("prompt", "A cute shih-tzu puppy")
-    .build();
-var result = fal.subscribe("fal-ai/fast-sdxl", SubscribeOptions.withInput(input));
-
+var input = Map.of(
+    "prompt", "A cute shih-tzu puppy"
+);
+var result = fal.subscribe("fal-ai/fast-sdxl",
+    SubscribeOptions.<JsonObject>builder()
+        .input(input)
+        .resultType(JsonObject.class)
+        .onQueueUpdate(update -> {
+            System.out.println(update.getStatus());
+        })
+        .build()
+);
 System.out.println(result.getRequestId());
 System.out.println(result.getData());
 ```
@@ -50,7 +56,7 @@ System.out.println(result.getData());
 ##### Install
 
 ```groovy
-implementation "ai.fal.client:fal-client-async:0.7.0"
+implementation "ai.fal.client:fal-client-async:0.7.1"
 ```
 
 ##### Call the API
@@ -58,14 +64,21 @@ implementation "ai.fal.client:fal-client-async:0.7.0"
 ```java
 import ai.fal.client.*;
 
-var fal = FalAsyncClient.withEnvCredentials();
+var fal = AsyncFalClient.withEnvCredentials();
 
-var input = JsonInput.input()
-    .set("prompt", "A cute shih-tzu puppy")
-    .build();
-CompletableFuture<> result = fal.subscribe("fal-ai/fast-sdxl", SubscribeOptions.withInput(input));
-
-result.thenAccept(result -> {
+var input = Map.of(
+    "prompt", "A cute shih-tzu puppy"
+);
+var future = fal.subscribe("fal-ai/fast-sdxl",
+    SubscribeOptions.<JsonObject>builder()
+        .input(input)
+        .resultType(JsonObject.class)
+        .onQueueUpdate(update -> {
+            System.out.println(update.getStatus());
+        })
+        .build()
+);
+future.thenAccept(result -> {
     System.out.println(result.getRequestId());
     System.out.println(result.getData());
 });
@@ -76,7 +89,7 @@ result.thenAccept(result -> {
 ##### Install
 
 ```groovy
-implementation "ai.fal.client:fal-client-kotlin:0.7.0"
+implementation "ai.fal.client:fal-client-kotlin:0.7.1"
 ```
 
 ##### Call the API
@@ -86,14 +99,13 @@ import ai.fal.client.kt.*
 
 val fal = createFalClient()
 
-val input = mapOf(
+val result = fal.subscribe("fal-ai/fast-sdxl", input = mapOf(
     "prompt" to "A cute shih-tzu puppy"
-)
-val result = fal.subscribe("fal-ai/fast-sdxl", input) { update ->
-    if (update is QueueUpdate.InProgress) {
-        println(update.logs)
-    }
+)) { update ->
+    print(update.status)
 }
+print(result.requestId)
+print(result.data)
 ```
 
 ## Contributing

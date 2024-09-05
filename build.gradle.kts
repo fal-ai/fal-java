@@ -8,7 +8,7 @@ plugins {
 
 subprojects {
     group = "ai.fal.client"
-    version = "0.7.1-SNAPSHOT"
+    version = "0.7.1"
 
     apply(plugin = "com.diffplug.spotless")
     apply(plugin = "com.vanniktech.maven.publish")
@@ -27,7 +27,7 @@ subprojects {
     }
 
     mavenPublishing {
-        publishToMavenCentral(SonatypeHost.DEFAULT, automaticRelease = true)
+        publishToMavenCentral(SonatypeHost.S01, automaticRelease = true)
         signAllPublications()
         pom {
             name.set("Fal Client Library")
