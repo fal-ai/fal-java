@@ -15,7 +15,7 @@ public class QueueSubscribeOptions implements ApiOptions<QueueStatus.Completed> 
 
     private final String requestId;
     private final Boolean logs;
-    private final Consumer<QueueStatus.StatusUpdate> onUpdate;
+    private final Consumer<QueueStatus.StatusUpdate> onQueueUpdate;
 
     @Override
     public String getHttpMethod() {

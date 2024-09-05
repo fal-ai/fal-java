@@ -67,6 +67,7 @@ interface QueueClient {
      * @param endpointId The ID of the endpoint to send the request to.
      * @param requestId The ID of the request to subscribe to.
      * @param options The options to use for the request.
+     * @param onQueueUpdate The status update callback.
      *
      * @see #submit
      * @see #status
@@ -75,7 +76,7 @@ interface QueueClient {
         endpointId: String,
         requestId: String,
         options: StatusSubscribeOptions = StatusSubscribeOptions(),
-        onUpdate: OnStatusUpdate? = null,
+        onQueueUpdate: OnStatusUpdate? = null,
     ): QueueStatus.Completed
 
     /**
@@ -133,14 +134,14 @@ internal class QueueClientImpl(
         endpointId: String,
         requestId: String,
         options: StatusSubscribeOptions,
-        onUpdate: OnStatusUpdate?,
+        onQueueUpdate: OnStatusUpdate?,
     ): QueueStatus.Completed {
         return queueClient.subscribeToStatus(
             endpointId,
             InternalSubscribeOptions.builder()
                 .requestId(requestId)
                 .logs(options.logs)
-                .onUpdate(onUpdate)
+                .onQueueUpdate(onQueueUpdate)
                 .build(),
         ).await()
     }

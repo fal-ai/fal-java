@@ -8,7 +8,7 @@ plugins {
 
 subprojects {
     group = "ai.fal.client"
-    version = "0.7.0"
+    version = "0.7.1-SNAPSHOT"
 
     apply(plugin = "com.diffplug.spotless")
     apply(plugin = "com.vanniktech.maven.publish")

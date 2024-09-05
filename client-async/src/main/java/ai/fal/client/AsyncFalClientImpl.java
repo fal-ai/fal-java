@@ -45,7 +45,7 @@ public class AsyncFalClientImpl implements AsyncFalClient {
                         QueueSubscribeOptions.builder()
                                 .requestId(submitted.getRequestId())
                                 .logs(options.getLogs())
-                                .onUpdate(options.getOnUpdate())
+                                .onQueueUpdate(options.getOnQueueUpdate())
                                 .build()))
                 .thenCompose((completed) -> queueClient.result(
                         endpointId,

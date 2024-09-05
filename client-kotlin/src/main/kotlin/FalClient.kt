@@ -62,14 +62,14 @@ interface FalClient {
      * @param input The input data to send to the endpoint.
      * @param resultType The expected result type of the request.
      * @param options The options to use for the request.
-     * @param onUpdate A callback to receive status updates from the queue subscription.
+     * @param onQueueUpdate A callback to receive status updates from the queue subscription.
      */
     suspend fun <Output : Any> subscribe(
         endpointId: String,
         input: Any,
         resultType: KClass<Output>,
         options: SubscribeOptions = SubscribeOptions(),
-        onUpdate: OnStatusUpdate? = null,
+        onQueueUpdate: OnStatusUpdate? = null,
     ): RequestOutput<Output>
 }
 
@@ -108,7 +108,7 @@ internal class FalClientKotlinImpl(
         input: Any,
         resultType: KClass<Output>,
         options: SubscribeOptions,
-        onUpdate: OnStatusUpdate?,
+        onQueueUpdate: OnStatusUpdate?,
     ): RequestOutput<Output> {
         println(resultType)
         println(options)
@@ -117,7 +117,7 @@ internal class FalClientKotlinImpl(
                 .input(input)
                 .resultType(resultType.java)
                 .logs(options.logs)
-                .onUpdate(onUpdate)
+                .onQueueUpdate(onQueueUpdate)
                 .build()
         return client.subscribe(endpointId, internalOptions).thenConvertOutput().await()
     }

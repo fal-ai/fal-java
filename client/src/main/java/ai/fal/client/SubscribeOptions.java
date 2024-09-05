@@ -25,7 +25,7 @@ public class SubscribeOptions<O> implements ApiOptions<O> {
     private final Boolean logs;
 
     @Nullable
-    private final Consumer<QueueStatus.StatusUpdate> onUpdate;
+    private final Consumer<QueueStatus.StatusUpdate> onQueueUpdate;
 
     @Override
     public String getHttpMethod() {

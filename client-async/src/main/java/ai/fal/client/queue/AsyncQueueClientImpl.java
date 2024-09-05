@@ -90,7 +90,7 @@ public class AsyncQueueClientImpl implements AsyncQueueClient {
                     @Nonnull String data) {
                 final var json = httpClient.fromJson(data, JsonObject.class);
                 final var status = httpClient.fromJson(json, QueueStatus.resolveType(json));
-                final var onUpdate = options.getOnUpdate();
+                final var onUpdate = options.getOnQueueUpdate();
                 if (onUpdate != null) {
                     onUpdate.accept(status);
                 }

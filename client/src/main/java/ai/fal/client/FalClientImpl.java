@@ -45,7 +45,7 @@ public class FalClientImpl implements FalClient {
                 QueueSubscribeOptions.builder()
                         .requestId(enqueued.getRequestId())
                         .logs(options.getLogs())
-                        .onUpdate(options.getOnUpdate())
+                        .onQueueUpdate(options.getOnQueueUpdate())
                         .build());
 
         return queueClient.result(
