@@ -39,3 +39,18 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 tasks.test {
     useJUnitPlatform()
 }
+
+afterEvaluate {
+    when {
+        plugins.hasPlugin("org.jetbrains.kotlin.jvm") -> {
+            tasks.named<org.jetbrains.dokka.gradle.DokkaTask>("dokkaHtml") {
+                doLast {
+                    copy {
+                        from(outputDirectory)
+                        into(rootProject.projectDir.resolve("docs/${project.name}"))
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"ai.fal.client","l":"AsyncFalClient"},{"p":"ai.fal.client","l":"AsyncFalClientImpl"},{"p":"ai.fal.client.queue","l":"AsyncQueueClient"},{"p":"ai.fal.client.queue","l":"AsyncQueueClientImpl"}];updateSearchResults();

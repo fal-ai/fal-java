@@ -21,8 +21,8 @@ subprojects {
             ktlint()
         }
         kotlinGradle {
-          target("*.gradle.kts")
-          ktlint()
+            target("*.gradle.kts")
+            ktlint()
         }
     }
 
@@ -58,6 +58,23 @@ subprojects {
     tasks.withType<Javadoc> {
         // Disable empty javadoc warnings
         (options as CoreJavadocOptions).addBooleanOption("Xdoclint:none", true)
+    }
+
+    afterEvaluate {
+        when {
+            plugins.hasPlugin("java") && !plugins.hasPlugin("org.jetbrains.kotlin.jvm") -> {
+                tasks.named<Javadoc>("javadoc") {
+                    options.encoding = "UTF-8"
+
+                    doLast {
+                        copy {
+                            from(destinationDir)
+                            into(rootProject.projectDir.resolve("docs/${project.name}"))
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }

@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"ai.fal.client"},{"l":"ai.fal.client.exception"},{"l":"ai.fal.client.http"},{"l":"ai.fal.client.queue"},{"l":"ai.fal.client.type"},{"l":"ai.fal.client.util"},{"l":"All Packages","u":"allpackages-index.html"}];updateSearchResults();

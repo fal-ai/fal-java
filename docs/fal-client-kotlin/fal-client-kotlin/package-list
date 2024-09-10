@@ -1,0 +1,40 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:ai.fal.client.kt////PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/index.html
+$dokka.location:ai.fal.client.kt//createFalClient/#ai.fal.client.ClientConfig?/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/create-fal-client.html
+$dokka.location:ai.fal.client.kt//createFalClient/#ai.fal.client.CredentialsResolver/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/create-fal-client.html
+$dokka.location:ai.fal.client.kt//result/ai.fal.client.kt.QueueClient#kotlin.String#kotlin.String/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/result.html
+$dokka.location:ai.fal.client.kt//run/ai.fal.client.kt.FalClient#kotlin.String#kotlin.Any#ai.fal.client.kt.RunOptions/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/run.html
+$dokka.location:ai.fal.client.kt//subscribe/ai.fal.client.kt.FalClient#kotlin.String#kotlin.Any#ai.fal.client.kt.SubscribeOptions#kotlin.Function1[ai.fal.client.queue.QueueStatus.StatusUpdate,kotlin.Unit]?/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/subscribe.html
+$dokka.location:ai.fal.client.kt/FalClient///PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-fal-client/index.html
+$dokka.location:ai.fal.client.kt/FalClient/queue/#/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-fal-client/queue.html
+$dokka.location:ai.fal.client.kt/FalClient/run/#kotlin.String#kotlin.Any#kotlin.reflect.KClass[TypeParam(bounds=[kotlin.Any])]#ai.fal.client.kt.RunOptions/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-fal-client/run.html
+$dokka.location:ai.fal.client.kt/FalClient/subscribe/#kotlin.String#kotlin.Any#kotlin.reflect.KClass[TypeParam(bounds=[kotlin.Any])]#ai.fal.client.kt.SubscribeOptions#kotlin.Function1[ai.fal.client.queue.QueueStatus.StatusUpdate,kotlin.Unit]?/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-fal-client/subscribe.html
+$dokka.location:ai.fal.client.kt/OnStatusUpdate///PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-on-status-update/index.html
+$dokka.location:ai.fal.client.kt/QueueClient///PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-queue-client/index.html
+$dokka.location:ai.fal.client.kt/QueueClient/result/#kotlin.String#kotlin.String#kotlin.reflect.KClass[TypeParam(bounds=[kotlin.Any])]/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-queue-client/result.html
+$dokka.location:ai.fal.client.kt/QueueClient/status/#kotlin.String#kotlin.String#ai.fal.client.kt.StatusOptions/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-queue-client/status.html
+$dokka.location:ai.fal.client.kt/QueueClient/submit/#kotlin.String#TypeParam(bounds=[kotlin.Any?])#ai.fal.client.kt.SubmitOptions/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-queue-client/submit.html
+$dokka.location:ai.fal.client.kt/QueueClient/subscribeToStatus/#kotlin.String#kotlin.String#ai.fal.client.kt.StatusSubscribeOptions#kotlin.Function1[ai.fal.client.queue.QueueStatus.StatusUpdate,kotlin.Unit]?/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-queue-client/subscribe-to-status.html
+$dokka.location:ai.fal.client.kt/RequestOutput///PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-request-output/index.html
+$dokka.location:ai.fal.client.kt/RequestOutput/RequestOutput/#TypeParam(bounds=[kotlin.Any?])#kotlin.String/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-request-output/-request-output.html
+$dokka.location:ai.fal.client.kt/RequestOutput/data/#/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-request-output/data.html
+$dokka.location:ai.fal.client.kt/RequestOutput/requestId/#/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-request-output/request-id.html
+$dokka.location:ai.fal.client.kt/RunOptions///PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-run-options/index.html
+$dokka.location:ai.fal.client.kt/RunOptions/RunOptions/#kotlin.String/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-run-options/-run-options.html
+$dokka.location:ai.fal.client.kt/RunOptions/httpMethod/#/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-run-options/http-method.html
+$dokka.location:ai.fal.client.kt/StatusOptions///PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-status-options/index.html
+$dokka.location:ai.fal.client.kt/StatusOptions/StatusOptions/#kotlin.Boolean/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-status-options/-status-options.html
+$dokka.location:ai.fal.client.kt/StatusOptions/logs/#/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-status-options/logs.html
+$dokka.location:ai.fal.client.kt/StatusSubscribeOptions///PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-status-subscribe-options/index.html
+$dokka.location:ai.fal.client.kt/StatusSubscribeOptions/StatusSubscribeOptions/#kotlin.Boolean/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-status-subscribe-options/-status-subscribe-options.html
+$dokka.location:ai.fal.client.kt/StatusSubscribeOptions/logs/#/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-status-subscribe-options/logs.html
+$dokka.location:ai.fal.client.kt/SubmitOptions///PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-submit-options/index.html
+$dokka.location:ai.fal.client.kt/SubmitOptions/SubmitOptions/#kotlin.String?/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-submit-options/-submit-options.html
+$dokka.location:ai.fal.client.kt/SubmitOptions/webhookUrl/#/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-submit-options/webhook-url.html
+$dokka.location:ai.fal.client.kt/SubscribeOptions///PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-subscribe-options/index.html
+$dokka.location:ai.fal.client.kt/SubscribeOptions/SubscribeOptions/#kotlin.Boolean#kotlin.String?/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-subscribe-options/-subscribe-options.html
+$dokka.location:ai.fal.client.kt/SubscribeOptions/logs/#/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-subscribe-options/logs.html
+$dokka.location:ai.fal.client.kt/SubscribeOptions/webhookUrl/#/PointingToDeclaration/fal-client-kotlin/ai.fal.client.kt/-subscribe-options/webhook-url.html
+ai.fal.client.kt
+
