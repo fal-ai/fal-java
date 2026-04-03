@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import jakarta.annotation.Nonnull;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -101,15 +102,76 @@ public class HttpClient {
 
     public FalException responseToException(Response response) {
         final var requestId = response.header(HEADER_REQUEST_ID);
+        final var statusCode = response.code();
         final var contentType = response.header("content-type");
+        String bodyString = null;
+
         if (contentType != null && contentType.contains("application/json")) {
             final var body = response.body();
             if (body != null) {
-                final var json = gson.fromJson(body.charStream(), JsonElement.class);
+                try {
+                    bodyString = body.string();
+                } catch (IOException ignored) {
+                }
             }
         }
 
-        return new FalException("Request failed with code: " + response.code(), requestId);
+        var message = "Request failed with code: " + statusCode;
+        if (bodyString != null) {
+            final var detail = extractDetailMessage(bodyString);
+            if (detail != null) {
+                message += ": " + detail;
+            }
+        }
+
+        return new FalException(message, requestId, statusCode, bodyString);
+    }
+
+    private String extractDetailMessage(String bodyString) {
+        try {
+            final var json = gson.fromJson(bodyString, JsonElement.class);
+            if (json == null || !json.isJsonObject()) {
+                return null;
+            }
+            final var jsonObject = json.getAsJsonObject();
+
+            // Handle {"detail": [{"msg": "...", ...}, ...]} format (validation errors)
+            if (jsonObject.has("detail")) {
+                final var detail = jsonObject.get("detail");
+                if (detail.isJsonArray()) {
+                    final var messages = new ArrayList<String>();
+                    for (final var item : detail.getAsJsonArray()) {
+                        if (item.isJsonObject()) {
+                            final var itemObj = item.getAsJsonObject();
+                            if (itemObj.has("msg")) {
+                                messages.add(itemObj.get("msg").getAsString());
+                            }
+                        }
+                    }
+                    if (!messages.isEmpty()) {
+                        return String.join("; ", messages);
+                    }
+                }
+                if (detail.isJsonPrimitive() && detail.getAsJsonPrimitive().isString()) {
+                    return detail.getAsString();
+                }
+            }
+
+            // Handle {"message": "..."} format
+            if (jsonObject.has("message")) {
+                return jsonObject.get("message").getAsString();
+            }
+
+            // Handle {"error": "..."} format
+            if (jsonObject.has("error")) {
+                final var error = jsonObject.get("error");
+                if (error.isJsonPrimitive()) {
+                    return error.getAsString();
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 
     public <T> Output<T> wrapInResult(Response response, Class<T> resultType) {
